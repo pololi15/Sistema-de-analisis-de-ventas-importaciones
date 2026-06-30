@@ -1,0 +1,8 @@
+importacion_id,fecha_importacion,proveedor_id,producto_id,cantidad_importada,costo_total,moneda,estado
+1,2025-12-15,3,1,10,32000,USD,recibido
+2,2025-12-20,4,4,15,13500,usd,RECIBIDO
+3,2026-01-03,2,2,100,4500,BOB,en transito
+4,2026-01-05,1,3,40,7200,Bs.,recibido
+5,fecha_error,3,6,50,7500,USD,recibido
+6,2026-01-08,99,7,25,2500,BOB,recibido
+7,2026-01-09,3,8,-20,4200,USD,recibido

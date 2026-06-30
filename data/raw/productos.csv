@@ -1,0 +1,9 @@
+producto_id,nombre_producto,categoria,marca,costo_unitario,precio_venta,stock
+1,Laptop Lenovo IdeaPad,Computadoras,Lenovo,3200,4200,15
+2,Mouse Logitech M170,Accesorios, logitech ,45,80,100
+3,Teclado Redragon Kumara,Accesorios,REDRAGON,180,260,40
+4,Monitor Samsung 24,Monitores,Samsung,900,1250,20
+5,Monitor Samsung 24,monitores,SAMSUNG ,900,1250,20
+6,Audifonos JBL Tune,Audio,jbl,150,230,50
+7,Webcam Genius,Accesorios,Genius,,140,25
+8,Disco SSD Kingston 480GB,Almacenamiento,KINGSTON,210,330,-5
