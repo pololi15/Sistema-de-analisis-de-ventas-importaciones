@@ -21,3 +21,22 @@
 - Valores nulos.
 - Cantidades negativas.
 - IDs inexistentes
+
+## Fase 2: ETL con pandas
+
+### Conceptos nuevos
+- ETL: Extract, Transform, Load.
+- Dataframe.
+- Limpieza de datos
+- Normalizacion de texto.
+- Conversion de tipos.
+- Manejo de valores nulos.
+- Exportacion de CSV procesados
+
+### Funciones usadas
+- pd.read_csv()
+- pd.to_datetume()
+- pd.to_numeric()
+- df.copy()
+- df.drop_duplicates()
+- df.to_csv()
