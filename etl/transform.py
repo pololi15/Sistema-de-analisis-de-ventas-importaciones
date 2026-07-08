@@ -110,18 +110,55 @@ def transform_all_data(dataframes):
 
 
 def validate_relationships(clean_data):
+    errors = []
+
     products_ids = set(clean_data["productos"]["producto_id"])
     customers_ids = set(clean_data["clientes"]["cliente_id"])
     suppliers_ids = set(clean_data["proveedores"]["proveedor_id"])
 
-    clean_data["ventas"] = clean_data["ventas"][
-        clean_data["ventas"]["cliente_id"].isin(customers_ids)
-        & clean_data["ventas"]["producto_id"].isin(products_ids)
-    ]
+    valid_sales = []
 
-    clean_data["importaciones"] = clean_data["importaciones"][
-        clean_data["importaciones"]["proveedor_id"].isin(suppliers_ids)
-        & clean_data["importaciones"]["producto_id"].isin(products_ids)
-    ]
+    for _, row in clean_data["ventas"].iterrows():
+        row_errors = []
+
+        if row["cliente_id"] not in customers_ids:
+            row_errors.append("cliente_id inexistente")
+        
+        if row["producto_id"] not in products_ids:
+            row_errors.append("producto_id inexistente")
+
+        if row_errors:
+            errors.append({
+                "dataset_name": "ventas",
+                "row_reference": row.to_dict(),
+                "error_type": "FOREIGN_KEY_ERROR",
+                "error_description": ", ".join(row_errors),
+            })
+        else:
+            valid_sales.append(row)
+
+    valid_imports = []
+    for _, row in clean_data["importaciones"].iterrows():
+        row_errors = []
+
+        if row["proveedor_id"] not in suppliers_ids:
+            row_errors.append("proveedor_id inexistente")
+        
+        if row["producto_id"] not in products_ids:
+            row_errors.append("producto_id inexistente")
+        
+        if row_errors:
+            errors.append({
+                "dataset_name": "importaciones",
+                "row_reference": row.to_dict(),
+                "error_type": "FOREIGN_KEY_ERROR",
+                "error_description": ", ".join(row_errors),
+            })
+        else:
+            valid_imports.append(row)
+        
+    clean_data["ventas"] = pd.DataFrame(valid_sales)
+    clean_data["importaciones"] = pd.DataFrame(valid_imports)
+    clean_data["data_quality_errors"] = pd.DataFrame(errors)
 
     return clean_data

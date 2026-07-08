@@ -78,7 +78,9 @@ def clear_tables():
                     imports,
                     products,
                     suppliers,
-                    customers
+                    customers,
+                 data_quality_errors,
+                 etl_logs
                  RESTART IDENTITY CASCADE;
                  """)
         )
@@ -107,4 +109,28 @@ def insert_etl_log(process_name, status, rows_processed=0, message=None):
                 "message": message,
                  },
         )
-        
+
+def insert_data_quality_error(dataset_name, row_reference, error_type, error_description):
+    with engine.begin() as connection:
+        connection.execute(
+            text("""
+                INSERT INTO data_quality_errors(
+                    dataset_name,
+                    row_reference,
+                    error_type,
+                    error_description
+                )
+                VALUES (
+                    :dataset_name,
+                    :row_reference,
+                    :error_type,
+                    :error_description
+                );
+            """),
+            {
+                "dataset_name": dataset_name,
+                "row_reference": str(row_reference),
+                "error_type": error_type,
+                "error_description": error_description,
+            },
+        ) 

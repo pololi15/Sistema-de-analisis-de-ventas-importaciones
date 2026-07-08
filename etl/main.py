@@ -2,8 +2,12 @@ from pathlib import Path
 
 from etl.extract import extract_all_data
 from etl.transform import transform_all_data
-from etl.load import clear_tables, load_dataframe, insert_etl_log
-
+from etl.load import (
+    clear_tables,
+    load_dataframe,
+    insert_etl_log,
+    insert_data_quality_error,
+)
 PROCESSED_DATA_PATH = Path("data/processed")
 
 def save_clean_data(clean_data):
@@ -38,6 +42,16 @@ def main():
             load_dataframe(clean_data[dataset_name], dataset_name)
             total_rows += rows
     
+        quality_errors = clean_data.get("data_quality_errors")
+
+        if quality_errors is not None and not quality_errors.empty:
+            for _, error in quality_errors.iterrows():
+                insert_data_quality_error(
+                    dataset_name=error["dataset_name"],
+                    row_reference=error["row_reference"],
+                    error_type=error["error_type"],
+                    error_description=error["error_description"],
+                )
         insert_etl_log(
             process_name="main_etl_pipeline",
             status="SUCCESS",
