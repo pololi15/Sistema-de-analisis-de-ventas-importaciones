@@ -82,3 +82,29 @@ def clear_tables():
                  RESTART IDENTITY CASCADE;
                  """)
         )
+
+def insert_etl_log(process_name, status, rows_processed=0, message=None):
+    with engine.begin() as connection:
+        connection.execute(
+            text("""
+                INSERT INTO etl_logs(
+                    process_name,
+                    status,
+                    rows_processed,
+                    message
+                )
+                VALUES (
+                    :process_name,
+                    :status,
+                    :rows_processed,
+                    :message
+                );
+            """),
+            {
+                "process_name": process_name,
+                "status": status,
+                "rows_processed": rows_processed,
+                "message": message,
+                 },
+        )
+        
