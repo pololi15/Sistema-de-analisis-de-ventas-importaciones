@@ -96,10 +96,32 @@ def clean_imports(df):
 
 
 def transform_all_data(dataframes):
-    return {
+    clean_data = {
         "productos": clean_products(dataframes["productos"]),
         "proveedores": clean_suppliers(dataframes["proveedores"]),
         "clientes": clean_customers(dataframes["clientes"]),
         "ventas": clean_sales(dataframes["ventas"]),
         "importaciones": clean_imports(dataframes["importaciones"]),
     }
+
+    clean_data = validate_relationships(clean_data)
+
+    return clean_data
+
+
+def validate_relationships(clean_data):
+    products_ids = set(clean_data["productos"]["producto_id"])
+    customers_ids = set(clean_data["clientes"]["cliente_id"])
+    suppliers_ids = set(clean_data["proveedores"]["proveedor_id"])
+
+    clean_data["ventas"] = clean_data["ventas"][
+        clean_data["ventas"]["cliente_id"].isin(customers_ids)
+        & clean_data["ventas"]["producto_id"].isin(products_ids)
+    ]
+
+    clean_data["importaciones"] = clean_data["importaciones"][
+        clean_data["importaciones"]["proveedor_id"].isin(suppliers_ids)
+        & clean_data["importaciones"]["producto_id"].isin(products_ids)
+    ]
+
+    return clean_data
